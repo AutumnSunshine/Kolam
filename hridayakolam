@@ -1,0 +1,58 @@
+
+ArrayList<PVector> arr =new ArrayList<PVector>(); 
+int blockSize =3;
+int rows =9;
+int spirals =10;
+int lastTime=0, delta=0, lineCounts=1 ;
+void setup()
+{   size(400, 400);
+    //background(23,112, 110);
+    background(24,77, 71);
+    makeDots();
+}
+void makeDots()
+{   float radius = 20;
+    
+    int count = 1;
+    for(int j = 0; j < rows; j++)
+     {   for(float i = 0; i < spirals; i++)
+         {   print(count+":");
+             println("::"+j+","+i);
+             arr.add(new PVector(radius * cos(TWO_PI/spirals*i), radius * sin(TWO_PI/spirals*i)));
+             count++;
+         }
+         radius += 20;
+     }
+}
+void draw()
+{    translate(width/2.0, height/2.0);
+     noStroke();
+     delta = millis() - lastTime;
+     if(delta > 10 && lineCounts <= rows * spirals)
+        lineCounts++;
+        
+     //fill(0,0,255);
+     fill(238,187,77);
+     
+     for(PVector j : arr)
+       ellipse(j.x, j.y, blockSize, blockSize);
+     
+     stroke(150, 187, 124);
+     
+    // stroke(251, 120, 19);
+     //Draw the curves
+     int diff = 2 * spirals + 1, p2 = 1, p1 = 1;
+     
+     for(int i = 0 ; i< lineCounts  ; i++, p1 = p2)
+     {  
+        if(p1 % spirals == 0)
+           p2 = (p1 + spirals + 1)% (rows * spirals) ;
+        else 
+           p2 = (p1 + diff)% (rows * spirals);
+        if(p2 == 0) 
+           p2 = rows * spirals;
+              
+        line(arr.get(p1-1).x,arr.get(p1-1).y,arr.get(p2-1).x,arr.get(p2-1).y);  
+     }
+     lastTime = millis();  
+}
